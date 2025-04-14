@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "url-to-audio",
+	"name": "read-articles",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-20",
 	"compatibility_flags": [
@@ -16,7 +16,20 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"ai": {
+		"binding": "AI"
+	},
+	"browser": {
+		"binding": "MYBROWSER"
+	},
+	"r2_buckets": [
+		{
+			"binding": "R2_BUCKET",
+			"bucket_name": "read-aloud-demo",
+			"preview_bucket_name": "read-aloud-demo-preview"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
