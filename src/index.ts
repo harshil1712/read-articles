@@ -3,8 +3,12 @@ import puppeteer from '@cloudflare/puppeteer';
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
-app.get('/', (c) => {
-	return c.text('Hello Hono!');
+app.get('/api/location', (c) => {
+	const request = c.req.raw;
+	const country = request.cf?.country || 'Unknown';
+	const region = request.cf?.region || 'Unknown';
+	
+	return c.json({ country, region });
 });
 
 app.post('/api/audio', async (c) => {

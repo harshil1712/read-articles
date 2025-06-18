@@ -38,6 +38,7 @@
 				padding: 0 2rem;
 				display: flex;
 				align-items: center;
+				justify-content: space-between;
 				gap: 1rem;
 			}
 
@@ -52,6 +53,18 @@
 
 			.logo i {
 				color: var(--cf-orange);
+			}
+
+			.location-info {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-size: 0.9rem;
+				color: #666;
+			}
+
+			.country-flag {
+				font-size: 1.2rem;
 			}
 
 			main {
@@ -214,6 +227,9 @@
 					<i class="fas fa-volume-up"></i>
 					Read Aloud
 				</div>
+				<div class="location-info" id="location-info">
+					<span>Loading location...</span>
+				</div>
 			</div>
 		</header>
 		<main>
@@ -255,7 +271,40 @@
 		</footer>
 
 		<script>
+			// Function to get country flag emoji
+			function getCountryFlag(countryCode) {
+				if (!countryCode || countryCode === 'Unknown') return '🌍';
+				
+				// Convert country code to flag emoji
+				const codePoints = countryCode
+					.toUpperCase()
+					.split('')
+					.map(char => 127397 + char.charCodeAt());
+				return String.fromCodePoint(...codePoints);
+			}
+
+			// Function to load location info
+			async function loadLocationInfo() {
+				try {
+					const response = await fetch('/api/location');
+					const data = await response.json();
+					
+					const locationInfo = document.getElementById('location-info');
+					const flag = getCountryFlag(data.country);
+					
+					locationInfo.innerHTML = `
+						<span class="country-flag">${flag}</span>
+						<span>${data.region || data.country}</span>
+					`;
+				} catch (error) {
+					console.error('Failed to load location info:', error);
+					document.getElementById('location-info').innerHTML = '<span>🌍 Global</span>';
+				}
+			}
+
 			document.addEventListener('DOMContentLoaded', () => {
+				// Load location info on page load
+				loadLocationInfo();
 				const generateButton = document.getElementById('generate-button');
 				const audioContainer = document.getElementById('audio-container');
 				const playerWrapper = document.getElementById('player-wrapper');
